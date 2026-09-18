@@ -41,6 +41,7 @@ export default async function AtribuicoesAdminPage({
     : [];
 
   const assignmentByUser = new Map(assignments.map((a) => [a.user_id, a]));
+  const miniatureById = new Map(miniatures.map((m) => [m.id, m]));
 
   const usedCountByMiniature = new Map<number, number>();
   for (const a of assignments) {
@@ -171,7 +172,8 @@ export default async function AtribuicoesAdminPage({
             dele; use os campos abaixo para conferir ou corrigir uma escolha.
           </p>
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-          <div className="grid grid-cols-[1fr_1.2fr_1.2fr_auto] gap-x-3 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+          <div className="grid grid-cols-[auto_1fr_1.2fr_1.2fr_auto] items-center gap-x-3 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+            <span />
             <span>Participante</span>
             <span>Miniatura</span>
             <span>Notas</span>
@@ -180,6 +182,9 @@ export default async function AtribuicoesAdminPage({
           <div className="divide-y divide-slate-100 dark:divide-slate-700">
             {members.map((member) => {
               const assignment = assignmentByUser.get(member.id);
+              const chosenMiniature = assignment
+                ? miniatureById.get(assignment.miniature_id)
+                : undefined;
               const setAssignmentForUser = setAssignment.bind(
                 null,
                 selectedMeeting.id,
@@ -189,8 +194,20 @@ export default async function AtribuicoesAdminPage({
                 <form
                   key={member.id}
                   action={setAssignmentForUser}
-                  className="grid grid-cols-[1fr_1.2fr_1.2fr_auto] items-center gap-x-3 px-4 py-2"
+                  className="grid grid-cols-[auto_1fr_1.2fr_1.2fr_auto] items-center gap-x-3 px-4 py-2"
                 >
+                  <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded bg-slate-100 dark:bg-slate-900">
+                    {chosenMiniature?.image_path ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={chosenMiniature.image_path}
+                        alt={chosenMiniature.name}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-[10px] text-slate-400">—</span>
+                    )}
+                  </div>
                   <span className="font-medium text-slate-900 dark:text-slate-100">
                     {member.name}
                   </span>
