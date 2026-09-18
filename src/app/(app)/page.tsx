@@ -76,14 +76,25 @@ export default async function DashboardPage() {
           </p>
         ) : (
           <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-            <p className="text-xl font-medium capitalize text-slate-900 dark:text-slate-100">
-              {formatDateLong(nextMeeting.date)}
-            </p>
-            {nextMeeting.location && (
-              <p className="mt-1 text-slate-600 dark:text-slate-400">
-                📍 {nextMeeting.location}
-              </p>
-            )}
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xl font-medium capitalize text-slate-900 dark:text-slate-100">
+                  {formatDateLong(nextMeeting.date)}
+                  {nextMeeting.time ? ` às ${nextMeeting.time}` : ""}
+                </p>
+                {nextMeeting.location && (
+                  <p className="mt-1 text-slate-600 dark:text-slate-400">
+                    📍 {nextMeeting.location}
+                  </p>
+                )}
+              </div>
+              <a
+                href={`/api/calendar/${nextMeeting.id}`}
+                className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+              >
+                📅 Adicionar ao calendário
+              </a>
+            </div>
             {nextMeeting.notes && (
               <p className="mt-3 whitespace-pre-wrap text-sm text-slate-600 dark:text-slate-400">
                 {nextMeeting.notes}
