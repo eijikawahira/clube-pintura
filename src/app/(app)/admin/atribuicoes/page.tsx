@@ -101,6 +101,75 @@ export default async function AtribuicoesAdminPage({
           .
         </p>
       ) : (
+        <>
+        <section>
+          <h2 className="mb-3 text-base font-semibold text-slate-900 dark:text-slate-100">
+            Estoque para este encontro
+          </h2>
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+            <div className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-x-3 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+              <span />
+              <span>Miniatura</span>
+              <span>Estoque</span>
+              <span>Em uso</span>
+              <span>Disponível</span>
+            </div>
+            <div className="divide-y divide-slate-100 dark:divide-slate-700">
+              {miniatures.map((m) => {
+                const used = usedCountByMiniature.get(m.id) ?? 0;
+                const available = m.stock - used;
+                return (
+                  <div
+                    key={m.id}
+                    className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-x-3 px-4 py-2 text-sm"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded bg-slate-100 dark:bg-slate-900">
+                      {m.image_path ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={m.image_path}
+                          alt={m.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-[10px] text-slate-400">
+                          Sem foto
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-medium text-slate-900 dark:text-slate-100">
+                      {m.name}
+                    </span>
+                    <span className="text-slate-600 dark:text-slate-400">
+                      {m.stock}
+                    </span>
+                    <span className="text-slate-600 dark:text-slate-400">
+                      {used}
+                    </span>
+                    <span
+                      className={
+                        available > 0
+                          ? "font-medium text-green-600 dark:text-green-400"
+                          : "font-medium text-red-500 dark:text-red-400"
+                      }
+                    >
+                      {available}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-base font-semibold text-slate-900 dark:text-slate-100">
+            Quem escolheu o quê
+          </h2>
+          <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+            Cada participante pode escolher a própria miniatura pelo painel
+            dele; use os campos abaixo para conferir ou corrigir uma escolha.
+          </p>
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <div className="grid grid-cols-[1fr_1.2fr_1.2fr_auto] gap-x-3 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-500 dark:bg-slate-900 dark:text-slate-400">
             <span>Participante</span>
@@ -168,6 +237,8 @@ export default async function AtribuicoesAdminPage({
             })}
           </div>
         </div>
+        </section>
+        </>
       )}
     </div>
   );
