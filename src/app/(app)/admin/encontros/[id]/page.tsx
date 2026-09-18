@@ -7,6 +7,7 @@ import {
   deletePreparation,
   updateMeeting,
 } from "@/lib/actions/meetings";
+import { AddressInput } from "../AddressInput";
 
 export default async function EncontroDetailPage({
   params,
@@ -73,18 +74,27 @@ export default async function EncontroDetailPage({
           </div>
           <div className="flex flex-col gap-1">
             <label
+              htmlFor="time"
+              className="text-sm font-medium text-slate-700 dark:text-slate-300"
+            >
+              Horário
+            </label>
+            <input
+              id="time"
+              name="time"
+              type="time"
+              defaultValue={meeting.time ?? ""}
+              className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+            />
+          </div>
+          <div className="flex flex-col gap-1 sm:col-span-2">
+            <label
               htmlFor="location"
               className="text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               Local
             </label>
-            <input
-              id="location"
-              name="location"
-              type="text"
-              defaultValue={meeting.location ?? ""}
-              className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
-            />
+            <AddressInput defaultValue={meeting.location ?? ""} />
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label

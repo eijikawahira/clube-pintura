@@ -51,6 +51,11 @@ AUTH_URL=http://IP-DO-SERVIDOR:3000
 (Depois de configurar o Nginx no passo 7, atualize `AUTH_URL` para
 `http://IP-DO-SERVIDOR` sem a porta, ou para seu domínio com `https://`.)
 
+Opcionalmente, preencha também `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` para ativar o
+autocomplete de endereço na tela de encontros do admin (veja instruções no
+próprio `.env.example`). Sem essa chave o campo de local continua funcionando
+normalmente como texto livre.
+
 ## 5. Instalar dependências, migrar e criar o admin
 
 ```bash

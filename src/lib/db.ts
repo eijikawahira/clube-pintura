@@ -35,6 +35,7 @@ export function ensureSchema() {
     CREATE TABLE IF NOT EXISTS meetings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       date TEXT NOT NULL,
+      time TEXT,
       location TEXT,
       notes TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -99,6 +100,15 @@ export function ensureSchema() {
       "ALTER TABLE miniatures ADD COLUMN stock INTEGER NOT NULL DEFAULT 1"
     );
   }
+
+  // Migração aditiva: horário do encontro (usado no .ics), opcional.
+  const meetingColumns = db.prepare("PRAGMA table_info(meetings)").all() as {
+    name: string;
+  }[];
+  const hasTimeColumn = meetingColumns.some((c) => c.name === "time");
+  if (meetingColumns.length > 0 && !hasTimeColumn) {
+    db.exec("ALTER TABLE meetings ADD COLUMN time TEXT");
+  }
 }
 
 ensureSchema();
@@ -115,6 +125,7 @@ export type UserRow = {
 export type MeetingRow = {
   id: number;
   date: string;
+  time: string | null;
   location: string | null;
   notes: string | null;
   created_at: string;

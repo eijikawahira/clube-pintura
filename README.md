@@ -23,14 +23,22 @@ npm run dev                # http://localhost:3000
 
 Faça login com o usuário admin criado acima. Como admin você pode:
 
-- **Encontros** — cadastrar a data/local do próximo encontro e os preparativos.
+- **Encontros** — cadastrar data, horário e endereço (com autocomplete do
+  Google Maps, se configurado) do próximo encontro, e os preparativos.
 - **Participantes** — criar login para cada pessoa do clube (senha inicial,
   reset de senha, remover).
+- **Miniaturas** — catálogo com nome, dimensões, imagem e estoque de cada
+  miniatura.
 - **Atribuições** — para um encontro, definir qual miniatura cada participante
-  vai pintar.
+  vai pintar (respeitando o estoque disponível).
 
-Cada participante, ao logar, só vê o próximo encontro, os preparativos e a
-miniatura atribuída a ele — sem acesso às telas de admin.
+Cada participante, ao logar, só vê o próximo encontro, os preparativos (como
+checklist marcável), a miniatura atribuída a ele com imagem, e um botão para
+baixar um arquivo `.ics` e adicionar o encontro ao próprio calendário — sem
+acesso às telas de admin.
+
+Para ativar o autocomplete de endereço, veja a variável
+`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` no `.env.example`.
 
 ## Deploy
 

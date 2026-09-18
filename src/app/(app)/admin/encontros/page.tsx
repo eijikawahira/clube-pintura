@@ -2,6 +2,7 @@ import Link from "next/link";
 import { db, type MeetingRow } from "@/lib/db";
 import { createMeeting } from "@/lib/actions/meetings";
 import { formatDateLong } from "@/lib/format";
+import { AddressInput } from "./AddressInput";
 
 export default function EncontrosAdminPage() {
   const meetings = db
@@ -35,17 +36,26 @@ export default function EncontrosAdminPage() {
           </div>
           <div className="flex flex-col gap-1">
             <label
+              htmlFor="time"
+              className="text-sm font-medium text-slate-700 dark:text-slate-300"
+            >
+              Horário
+            </label>
+            <input
+              id="time"
+              name="time"
+              type="time"
+              className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+            />
+          </div>
+          <div className="flex flex-col gap-1 sm:col-span-2">
+            <label
               htmlFor="location"
               className="text-sm font-medium text-slate-700 dark:text-slate-300"
             >
               Local
             </label>
-            <input
-              id="location"
-              name="location"
-              type="text"
-              className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
-            />
+            <AddressInput />
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label
@@ -88,6 +98,7 @@ export default function EncontrosAdminPage() {
                 >
                   <span className="capitalize text-slate-900 dark:text-slate-100">
                     {formatDateLong(m.date)}
+                    {m.time ? ` às ${m.time}` : ""}
                   </span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">
                     {m.location ?? ""}
