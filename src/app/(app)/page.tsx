@@ -1,7 +1,8 @@
-import { db, type MeetingRow } from "@/lib/db";
+import { db, type MeetingRow, type MiniatureRow } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { formatDateLong, formatDateShort, todayIso } from "@/lib/format";
 import { PreparationChecklist } from "./PreparationChecklist";
+import { MiniatureSelector, type MiniatureOption } from "./MiniatureSelector";
 
 type AssignmentWithMiniature = {
   miniature_id: number;
@@ -50,6 +51,39 @@ export default async function DashboardPage() {
         )
         .get(nextMeeting.id, userId) as AssignmentWithMiniature | undefined)
     : undefined;
+
+  const miniatureOptions: MiniatureOption[] = nextMeeting
+    ? (() => {
+        const miniatures = db
+          .prepare("SELECT * FROM miniatures ORDER BY name ASC")
+          .all() as MiniatureRow[];
+
+        const usedCounts = db
+          .prepare(
+            `SELECT miniature_id, COUNT(*) AS count FROM assignments
+             WHERE meeting_id = ?
+             GROUP BY miniature_id`
+          )
+          .all(nextMeeting.id) as { miniature_id: number; count: number }[];
+        const usedByMiniature = new Map(
+          usedCounts.map((r) => [r.miniature_id, r.count])
+        );
+
+        return miniatures.map((m) => {
+          const isMine = myAssignment?.miniature_id === m.id;
+          const totalUsed = usedByMiniature.get(m.id) ?? 0;
+          const usedByOthers = isMine ? totalUsed - 1 : totalUsed;
+          return {
+            id: m.id,
+            name: m.name,
+            dimensions: m.dimensions,
+            imagePath: m.image_path,
+            available: m.stock - usedByOthers,
+            isMine,
+          };
+        });
+      })()
+    : [];
 
   const pastMeetings = db
     .prepare(
@@ -101,62 +135,42 @@ export default async function DashboardPage() {
               </p>
             )}
 
-            <div className="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h2 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Preparativos
-                </h2>
-                {preparations.length === 0 ? (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Nenhum preparativo cadastrado ainda.
-                  </p>
-                ) : (
-                  <PreparationChecklist
-                    items={preparations.map((p) => ({
-                      id: p.id,
-                      description: p.description,
-                      checked: p.checked === 1,
-                    }))}
-                  />
-                )}
-              </div>
+            <div className="mt-6">
+              <h2 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                Preparativos
+              </h2>
+              {preparations.length === 0 ? (
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Nenhum preparativo cadastrado ainda.
+                </p>
+              ) : (
+                <PreparationChecklist
+                  items={preparations.map((p) => ({
+                    id: p.id,
+                    description: p.description,
+                    checked: p.checked === 1,
+                  }))}
+                />
+              )}
+            </div>
 
-              <div>
-                <h2 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Sua miniatura
-                </h2>
-                {myAssignment ? (
-                  <div className="flex gap-3">
-                    {myAssignment.image_path && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={myAssignment.image_path}
-                        alt={myAssignment.miniature_name}
-                        className="h-20 w-20 shrink-0 rounded-md object-cover"
-                      />
-                    )}
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">
-                        {myAssignment.miniature_name}
-                      </p>
-                      {myAssignment.dimensions && (
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          {myAssignment.dimensions}
-                        </p>
-                      )}
-                      {myAssignment.notes && (
-                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                          {myAssignment.notes}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Ainda não atribuída para este encontro.
-                  </p>
-                )}
-              </div>
+            <div className="mt-6">
+              <h2 className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                Sua miniatura
+              </h2>
+              <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+                Escolha qual miniatura você vai pintar neste encontro.
+              </p>
+              <MiniatureSelector
+                meetingId={nextMeeting.id}
+                miniatures={miniatureOptions}
+              />
+              {myAssignment?.notes && (
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+                  <span className="font-medium">Nota do admin:</span>{" "}
+                  {myAssignment.notes}
+                </p>
+              )}
             </div>
           </div>
         )}
