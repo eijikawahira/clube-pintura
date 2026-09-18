@@ -10,14 +10,14 @@ export default function ParticipantesAdminPage() {
   return (
     <div className="flex flex-col gap-8">
       <section>
-        <h1 className="mb-4 text-lg font-semibold text-slate-900">
+        <h1 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">
           Novo participante
         </h1>
         <NewUserForm />
       </section>
 
       <section>
-        <h2 className="mb-3 text-base font-semibold text-slate-900">
+        <h2 className="mb-3 text-base font-semibold text-slate-900 dark:text-slate-100">
           Participantes
         </h2>
         <div className="flex flex-col gap-3">
@@ -27,18 +27,20 @@ export default function ParticipantesAdminPage() {
             return (
               <div
                 key={u.id}
-                className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-700 dark:bg-slate-800"
               >
                 <div>
-                  <p className="font-medium text-slate-900">
+                  <p className="font-medium text-slate-900 dark:text-slate-100">
                     {u.name}{" "}
                     {u.role === "admin" && (
-                      <span className="ml-1 rounded bg-indigo-100 px-1.5 py-0.5 text-xs text-indigo-700">
+                      <span className="ml-1 rounded bg-indigo-100 px-1.5 py-0.5 text-xs text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
                         admin
                       </span>
                     )}
                   </p>
-                  <p className="text-sm text-slate-500">@{u.username}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    @{u.username}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
@@ -51,11 +53,11 @@ export default function ParticipantesAdminPage() {
                       type="password"
                       placeholder="Nova senha"
                       minLength={6}
-                      className="w-32 rounded-md border border-slate-300 px-2 py-1 text-sm"
+                      className="w-32 rounded-md border border-slate-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
                     />
                     <button
                       type="submit"
-                      className="rounded-md border border-slate-300 px-3 py-1 text-sm hover:bg-slate-100"
+                      className="rounded-md border border-slate-300 px-3 py-1 text-sm hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
                     >
                       Redefinir senha
                     </button>
@@ -63,7 +65,7 @@ export default function ParticipantesAdminPage() {
                   <form action={deleteUserWithId}>
                     <button
                       type="submit"
-                      className="rounded-md border border-red-200 px-3 py-1 text-sm text-red-600 hover:bg-red-50"
+                      className="rounded-md border border-red-200 px-3 py-1 text-sm text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
                     >
                       Remover
                     </button>

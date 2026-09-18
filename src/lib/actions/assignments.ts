@@ -10,21 +10,41 @@ export async function setAssignment(
   formData: FormData
 ) {
   await requireAdmin();
-  const miniatureName = String(formData.get("miniature_name") ?? "").trim();
-  const miniatureNotes = String(formData.get("miniature_notes") ?? "").trim();
+  const miniatureIdRaw = String(formData.get("miniature_id") ?? "");
+  const notes = String(formData.get("notes") ?? "").trim();
 
-  if (!miniatureName) {
+  if (!miniatureIdRaw) {
     db.prepare(
       "DELETE FROM assignments WHERE meeting_id = ? AND user_id = ?"
     ).run(meetingId, userId);
   } else {
+    const miniatureId = Number(miniatureIdRaw);
+
+    const miniature = db
+      .prepare("SELECT stock FROM miniatures WHERE id = ?")
+      .get(miniatureId) as { stock: number } | undefined;
+    if (!miniature) return;
+
+    const usedByOthers = (
+      db
+        .prepare(
+          `SELECT COUNT(*) AS count FROM assignments
+           WHERE meeting_id = ? AND miniature_id = ? AND user_id != ?`
+        )
+        .get(meetingId, miniatureId, userId) as { count: number }
+    ).count;
+
+    // Sem estoque sobrando para este participante: ignora a atribuição
+    // silenciosamente (o dropdown já não deveria oferecer essa opção).
+    if (usedByOthers >= miniature.stock) return;
+
     db.prepare(
-      `INSERT INTO assignments (meeting_id, user_id, miniature_name, miniature_notes)
+      `INSERT INTO assignments (meeting_id, user_id, miniature_id, notes)
        VALUES (?, ?, ?, ?)
        ON CONFLICT (meeting_id, user_id)
-       DO UPDATE SET miniature_name = excluded.miniature_name,
-                     miniature_notes = excluded.miniature_notes`
-    ).run(meetingId, userId, miniatureName, miniatureNotes || null);
+       DO UPDATE SET miniature_id = excluded.miniature_id,
+                     notes = excluded.notes`
+    ).run(meetingId, userId, miniatureId, notes || null);
   }
 
   revalidatePath("/admin/atribuicoes");

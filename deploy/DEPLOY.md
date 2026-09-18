@@ -61,8 +61,9 @@ npm run db:migrate
 npm run db:seed-admin   # siga o prompt interativo para criar o primeiro admin
 ```
 
-O banco SQLite fica em `/opt/clube-pintura/data/clube.db` — faça backup
-periódico desse arquivo (é o único dado persistente da aplicação).
+O banco SQLite fica em `/opt/clube-pintura/data/clube.db` e as imagens das
+miniaturas em `/opt/clube-pintura/public/uploads/` — faça backup periódico
+dos dois (são os únicos dados persistentes da aplicação).
 
 ## 6. Subir com PM2
 

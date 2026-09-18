@@ -37,8 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-# banco de dados local
+# banco de dados local e imagens enviadas pelo admin
 /data/
+/public/uploads/
 
 # typescript
 *.tsbuildinfo

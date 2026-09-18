@@ -1,10 +1,13 @@
 "use client";
 
 import { useActionState, useRef, useEffect } from "react";
-import { createUser } from "@/lib/actions/users";
+import { createMiniature } from "@/lib/actions/miniatures";
 
-export function NewUserForm() {
-  const [state, formAction, pending] = useActionState(createUser, undefined);
+export function NewMiniatureForm() {
+  const [state, formAction, pending] = useActionState(
+    createMiniature,
+    undefined
+  );
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -31,60 +34,60 @@ export function NewUserForm() {
           name="name"
           type="text"
           required
+          placeholder="Ex: Space Marine Intercessor"
           className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
       <div className="flex flex-col gap-1">
         <label
-          htmlFor="username"
+          htmlFor="dimensions"
           className="text-sm font-medium text-slate-700 dark:text-slate-300"
         >
-          Usuário (login)
+          Dimensões
         </label>
         <input
-          id="username"
-          name="username"
+          id="dimensions"
+          name="dimensions"
           type="text"
-          required
-          minLength={3}
+          placeholder="Ex: 28mm, base 32mm"
           className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
       <div className="flex flex-col gap-1">
         <label
-          htmlFor="password"
+          htmlFor="stock"
           className="text-sm font-medium text-slate-700 dark:text-slate-300"
         >
-          Senha inicial
+          Estoque (unidades físicas)
         </label>
         <input
-          id="password"
-          name="password"
-          type="text"
+          id="stock"
+          name="stock"
+          type="number"
+          min={0}
+          step={1}
+          defaultValue={1}
           required
-          minLength={6}
           className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 sm:col-span-2">
         <label
-          htmlFor="role"
+          htmlFor="image"
           className="text-sm font-medium text-slate-700 dark:text-slate-300"
         >
-          Papel
+          Imagem
         </label>
-        <select
-          id="role"
-          name="role"
-          defaultValue="member"
-          className="rounded-md border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
-        >
-          <option value="member">Participante</option>
-          <option value="admin">Admin</option>
-        </select>
+        <input
+          id="image"
+          name="image"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="rounded-md border border-slate-300 px-3 py-2 text-sm file:mr-3 file:rounded file:border-0 file:bg-slate-900 file:px-3 file:py-1 file:text-sm file:text-white dark:border-slate-600 dark:text-slate-300 dark:file:bg-slate-700"
+        />
       </div>
 
       {state?.error && (
@@ -98,7 +101,7 @@ export function NewUserForm() {
         disabled={pending}
         className="rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500 disabled:opacity-60 sm:w-fit"
       >
-        {pending ? "Criando..." : "Criar participante"}
+        {pending ? "Salvando..." : "Adicionar miniatura"}
       </button>
     </form>
   );

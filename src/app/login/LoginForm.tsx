@@ -9,7 +9,10 @@ export function LoginForm() {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="username" className="text-sm font-medium text-slate-700">
+        <label
+          htmlFor="username"
+          className="text-sm font-medium text-slate-700 dark:text-slate-300"
+        >
           Usuário
         </label>
         <input
@@ -19,12 +22,15 @@ export function LoginForm() {
           required
           autoFocus
           autoComplete="username"
-          className="rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium text-slate-700">
+        <label
+          htmlFor="password"
+          className="text-sm font-medium text-slate-700 dark:text-slate-300"
+        >
           Senha
         </label>
         <input
@@ -33,12 +39,12 @@ export function LoginForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
 
       {state?.error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {state.error}
         </p>
       )}
